@@ -1,0 +1,28 @@
+---
+# tasks file for mysql_db
+- name: Download MySQL community Repository
+  yum: 
+    name: "http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm"
+    state: present
+
+- name: Install MySQL Database
+  yum: 
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: 
+    - "mysql-server"
+  
+- name: Create MySQL configration
+  copy:
+    content: |
+      [client]
+      user=root
+      password="@targ8et"
+    dest: "/etc/.my.cnf"
+
+- name: Start MySQL Service
+  service:
+    name: mysqld
+    state: started
+    enabled: yes
